@@ -8,16 +8,17 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, PostbackEvent, ImageSendMessage, LocationSendMessage, TemplateSendMessage, ButtonsTemplate, URITemplateAction, ConfirmTemplate, PostbackTemplateAction
 from urllib.parse import parse_qsl
 from sqlalchemy import text
+import os
 
 # 定義 LINE Bot Channel Secret 及 Access Token
-line_bot_api = LineBotApi('pgTN+u/zwhAUstkrZ60BaO1mE/YdYgoQFm5Qr48+vK6c8y37MH80+EHNdLvrQudBqBwtb+J2bVgWhO6sUxzP7wB1ZHJdothjY+xpVhg1b34iv3Ok7EsjTx6Ici9uHXKt/sfwd8NSF+F4qdmByMcTpgdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('919134d00fd9c96f26422c71868103f9')
+line_bot_api = LineBotApi(os.getenv("LINE_BOT_TOKEN"))
+handler = WebhookHandler(os.getenv("LINE_BOT_SECRET"))
 
 # 定義 PostgreSQL 連線字串
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:123456@127.0.0.1:5432/hotel'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATEBASE_URL")
 db = SQLAlchemy(app)
 # 定義 LIFF ID
-liffid = '2008729527-Ld8ucs2f'
+liffid = os.getenv("LIFF_ID")
 
 #LIFF靜態頁面
 @app.route('/page')
@@ -284,4 +285,5 @@ def pushMessage(event, mtext):  ##推播訊息給所有顧客
         line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
 if __name__ == '__main__':
+
     app.run()
